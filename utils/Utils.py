@@ -1,5 +1,9 @@
 import os
 import requests
+from utils.Colors import Colors
+
+# paleta de colores
+bcolors = Colors()
 
 class Utils():
     def __init__(self):
@@ -12,16 +16,17 @@ class Utils():
             if(not os.path.exists(ruta)):
                 os.mkdir(ruta)
 
-    def testVisibility(self, url, proxy=None):
+    def testVisibility(self, url, proxy):
         try:
             r = requests.get(url, proxies=proxy) 
             return True
         except requests.exceptions.SSLError:
-            print("Certificado autofirmado") # TODO: Agregar Flag y opcion
-            return False
+            print(f"{bcolors.FAIL}[*ERROR*] Verificacion SSL - Intenta desactivarla con verify=false{bcolors.ENDC}") # TODO: Agregar Flag y opcion
+        except requests.exceptions.ProxyError:
+            print(f"{bcolors.FAIL}[*ERROR*] Verifica el PROXY - No hay visibilidad!{bcolors.ENDC}")
         except requests.exceptions.ConnectionError:
-            print("ERROR: NO CONECTA")
-            return False
+            print(f"{bcolors.FAIL}[*ERROR*] Verifica la URL - No hay visibilidad!{bcolors.ENDC}")
+        return False
 
     def testConection(self, target):
         # en cada modelo de target
