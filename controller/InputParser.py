@@ -69,7 +69,7 @@ class InputParser():
             dest="password",
             action="store",
             help="Password de conexion")
-        parser.add_argument("-t",
+        parser.add_argument("-t", 
             dest="token",
             action="store",
             help="Token de conexion")
@@ -81,11 +81,16 @@ class InputParser():
 
         self.args = parser.parse_args()
         self.strucURL()
+        self._lastChar()
         self.verify_conection()
         Utils().createdFolders(self.args.output)
-        
-        print(self.args)
-        print("test")
+
+        #print(self.args)
+        #print("test")
+    
+    def _lastChar(self):
+        if(self.args.url[0][-1] != "/"):
+            self.args.url[0] += "/"
             
     def verify_conection(self):
         proxy = self.armerProxy()
@@ -125,7 +130,7 @@ class InputParser():
 {bcolors.WARNING}|   O o-o o   o {bcolors.OKBLUE}|   O o  o o-O-o o-o  {bcolors.OKGREEN}|   | o-o  o-o 
 {bcolors.WARNING}|  /  |-'  \ /  {bcolors.OKBLUE}|  /  |  | | | | |  | {bcolors.OKGREEN}o   o |  |  \  
 {bcolors.WARNING}o-o   o-o   o   {bcolors.OKBLUE}o-o   o--o o o o O-o  {bcolors.OKGREEN} o-o  O-o  o-o 
-   @csl-labs /|\ csl@csl.com.co  {bcolors.OKBLUE}|          {bcolors.OKGREEN}|        
+   {bcolors.FAIL}@csl-labs /|\ csl@csl.com.co  {bcolors.OKBLUE}|          {bcolors.OKGREEN}|        
                                  {bcolors.OKBLUE}o          {bcolors.OKGREEN}o        
  
 {bcolors.ENDC}"""
