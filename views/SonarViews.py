@@ -1,20 +1,22 @@
 from utils.Colors import Colors
 
 # paleta de colores
-bcolors = Colors()
+bc = Colors()
 
 class SonarViews():
-    WS_VISIBILITY_OK = f"{bcolors.OKGREEN}[+] Acceso al WEB API: OK{bcolors.ENDC}"
-    WS_VISIBILITY_ERROR = f"{bcolors.FAIL}[-] Acceso al WEB API: SIN PERMISOS{bcolors.ENDC}"
-    SYS_ERROR = f"{bcolors.FAIL}[-] Sin version del servidor... {bcolors.ENDC}"
-    USERS_SEARCH_ERROR = f"{bcolors.FAIL}[-] No fue posible enumerar los usuarios... {bcolors.ENDC}"
-    USERS_SEARCH_COUNT = f"{bcolors.OKGREEN}[+] Total de usuarios enumerados: {bcolors.ENDC}"
+    WS_VISIBILITY_OK = f"{bc.OKGREEN}[+] Acceso al WEB API: OK{bc.ENDC}"
+    WS_VISIBILITY_ERROR = f"{bc.FAIL}[-] Acceso al WEB API: SIN PERMISOS{bc.ENDC}"
+    SYS_ERROR = f"{bc.FAIL}[-] Sin version del servidor... {bc.ENDC}"
+    USERS_SEARCH_ERROR = f"{bc.FAIL}[-] No fue posible enumerar los usuarios... {bc.ENDC}"
+    USERS_SEARCH_COUNT = f"{bc.OKGREEN}[+] Total de usuarios enumerados: {bc.ENDC}"
     
-    ORG_SEARCH = f"{bcolors.OKGREEN}[+] Organizaciones globales enumeradas: {bcolors.ENDC}"
-    ORG_SEARCH_ERROR = f"{bcolors.FAIL}[-] No fue posible enumerar las organizaciones publicas ...{bcolors.ENDC}"
-    ORG_SEARCH_MEMBER = f"{bcolors.OKGREEN}[+] Organizaciones a las que pertence la cuenta: {bcolors.ENDC}"
-    ORG_SEARCH_MEMBER_ERROR = f"{bcolors.FAIL}[-] No fue posible enumerar las organizaciones de la cuenta ...{bcolors.ENDC}"
-    DUMP_SAVE = f"{bcolors.OKBLUE}[|] Datos almacenados en: {bcolors.ENDC}"
+    ORG_SEARCH = f"{bc.OKGREEN}[+] Organizaciones globales enumeradas: {bc.ENDC}"
+    ORG_SEARCH_ERROR = f"{bc.FAIL}[-] No fue posible enumerar las organizaciones publicas ...{bc.ENDC}"
+    ORG_SEARCH_MEMBER = f"{bc.OKGREEN}[+] TOP Organizaciones de la cuenta: {bc.ENDC}"
+    ORG_SEARCH_MEMBER_ERROR = f"{bc.FAIL}[-] No fue posible enumerar las organizaciones de la cuenta ...{bc.ENDC}"
+    DUMP_SAVE = f"{bc.OKBLUE}[\] {bc.HEADER}Datos almacenados en: {bc.ENDC}"
+
+    AUTHORS_SEARCH = f"{bc.OKGREEN}[+] TOP autores de ISSUES: {bc.ENDC}"
 
     def TOP_LIST(jsonList, opt, top=10):
         if (len(jsonList)<10):
@@ -22,13 +24,20 @@ class SonarViews():
 
         for x in range(0, top):
             objIter = jsonList[x]
+            num = f"{bc.OKGREEN}{x}{bc.OKBLUE}"
             if(opt == "orgs"): 
                 if(objIter.get("actions") != None):
                     action = objIter['actions']
-                    print(f"{bcolors.OKBLUE}[|] {x}: {objIter['key']} -> {objIter['name']} {action}{bcolors.ENDC}")
+                    print(f"{bc.OKBLUE}[|] {num}: {objIter['key']} -> {objIter['name']} -> {action}{bc.ENDC}")
             elif(opt == "users"):
-                print(f"{bcolors.OKBLUE}[|] {x}: {objIter['login']} -> {objIter['name']} {bcolors.ENDC}")
+                print(f"{bc.OKBLUE}[|] {num}: {objIter['login']} -> {objIter['name']} {bc.ENDC}")
 
     def SYS_VERSION(data):
-        return f"{bcolors.OKBLUE}[|] Version SonarQube: {data['version']} \n[|] ID Server: {data['id']} \n[|] Status: {data['status']} {bcolors.ENDC}"
+        return f"{bc.OKBLUE}[|] Version SonarQube: {data['version']} \n[|] ID Server: {data['id']} \n[|] Status: {data['status']} {bc.ENDC}"
     
+    def AUTHORS_SEARCH_DUMP(org, data, top=10, t=0):
+        for x in data:
+            num = f"{bc.OKGREEN}{t}{bc.OKBLUE}"
+            if(t<top):
+                print(f"{bc.OKBLUE}[|] {num}: {x} {bc.ENDC}")
+            t += 1

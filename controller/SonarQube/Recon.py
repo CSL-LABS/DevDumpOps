@@ -9,7 +9,7 @@ class Recon():
         self.request = request
         if(self.isVisibilityWs()):
             self.getVersion()
-            self.getUsers()
+            #self.getUsers()
             self.getOrganizations()
 
     def isVisibilityWs(self):
@@ -50,11 +50,12 @@ class Recon():
 
         if(reqPublic.status_code == 200):
             data = reqPublic.json()
-            orgPublic = Utils.paging(data, endpoint, self.request)
+            print(sViews.ORG_SEARCH, data["paging"]["total"])
 
-            print(sViews.ORG_SEARCH, len(orgPublic))
-            sViews.TOP_LIST(orgPublic, "orgs") # vista top organizaciones publicas
-            self._saveData(orgPublic, "orgs")
+            if(input("Dump todo N/s: ") in ("S", "s")): #TODO: incluir flag de dump all
+                orgPublic = Utils.paging(data, endpoint, self.request)
+                sViews.TOP_LIST(orgPublic, "orgs") # vista top organizaciones publicas
+                self._saveData(orgPublic, "orgs")
 
             reqMember = self.request.get(endpoint + "?member=true")
             if(reqMember.status_code == 200):
@@ -63,17 +64,34 @@ class Recon():
 
                 print(sViews.ORG_SEARCH_MEMBER, len(orgMember))
                 sViews.TOP_LIST(orgMember, "orgs") # vista top organizaciones miembro
-                self._saveData(orgPublic, "orgsMember")
+                self._saveData(orgMember, "orgsMember")
+                self.getAuthors(orgMember)
             else: 
                 print(sViews.ORG_SEARCH_MEMBER_ERROR)
         else: 
             print(sViews.ORG_SEARCH_ERROR)
     
+    def getAuthors(self, orgs):
+        print(sViews.AUTHORS_SEARCH)
+        tmp = []
+        authors = {}
+        for org in orgs:
+            endpoint = self.url + "api/issues/authors?organization=" + org["key"]
+            authorReq = self.request.get(endpoint)
+            dataAuthors = authorReq.json()
+
+            authors[org["key"]] = dataAuthors["authors"]
+            if(len(tmp)<10):    # show top
+                sViews.AUTHORS_SEARCH_DUMP(org["key"], dataAuthors["authors"], t=len(tmp))
+            tmp += dataAuthors["authors"]
+        self._saveData(authors, "authors")
+    
     def _saveData(self, data, opt):
         opciones = {
             "users": ["users.txt", "LOGIN:NAME\n"],
             "orgs": ["orgs_public.txt", "ORGANIZATION:NAME\n"],
-            "orgsMember" : ["orgs_member.txt", "ORGANIZATION:NAME:ADMIN:DELETE:PROVISION\n"]
+            "orgsMember" : ["orgs_member.txt", "ORGANIZATION:NAME:ADMIN:DELETE:PROVISION\n"],
+            "authors": ["authors.txt", "AUTHORS\n"]
         }
         select = opciones[opt]
 
@@ -88,6 +106,10 @@ class Recon():
             elif(opt == "orgsMember"):
                 action = dataIter['actions']
                 sline = f"{dataIter['key']}:{dataIter['name']}:{action['admin']}:{action['delete']}:{action['provision']}\n"
+            elif(opt == "authors"):
+                sline = "\nORGANIZATION: " + dataIter + "\n"
+                for x in data[dataIter]:
+                    sline += f"{x}\n"
             f.write(sline)
         print(sViews.DUMP_SAVE, filename)
         f.close()

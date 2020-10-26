@@ -57,7 +57,8 @@ class InputParser():
             help="Dumpear todos los recursos")
 
         # Parametros generales
-        parser.add_argument("url", type=str,
+        parser.add_argument("url",
+            type=str,
             nargs=1,
             help="URL del servicio",
             metavar="[URL:PORT]")
@@ -117,7 +118,7 @@ class InputParser():
     
     def strucURL(self):
         url = self.args.url[0]
-        if(not "://" in url):
+        if(not (url.startswith("http://") or url.startswith("https://"))):
             self.args.url = ["http://" + url]
 
     def showBanner(self):
