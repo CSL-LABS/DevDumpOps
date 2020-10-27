@@ -3,14 +3,13 @@ from controller.SonarQube.Utils import Utils
 
 class Recon():
     
-    def __init__(self, url, request, path):
+    def __init__(self, url, request, path, dump):
         self.path = path + "/enumeration/"
         self.url = url
+        self.dump = dump
         self.request = request
-        if(self.isVisibilityWs()):
-            self.getVersion()
-            #self.getUsers()
-            self.getOrganizations()
+        self.isVisibilityWs()
+        self.getVersion()
 
     def isVisibilityWs(self):
         endpoint = self.url + "api/webservices/list" 
@@ -34,42 +33,51 @@ class Recon():
     def getUsers(self):
         endpoint = self.url + "api/users/search"
         req = self.request.get(endpoint)
+        users = []
         if (req.status_code == 200):
             data = req.json()
-            users = Utils.paging(data, endpoint, self.request)
+            print(sViews.USERS_SEARCH_COUNT + str(data["paging"]["total"])) # TODO: mejorar vista top user
 
-            print(sViews.USERS_SEARCH_COUNT + str(data["paging"]["total"])) # vista top users
-            sViews.TOP_LIST(users, "users")
-            self._saveData(users, "users")
+            if(self._validateQuantity(data["paging"]["total"])):
+                users = Utils.paging(data, endpoint, self.request)
+                sViews.TOP_LIST(users, "users")
+                self._saveData(users, "users")
         else: 
             print(sViews.USERS_SEARCH_ERROR)
+        return users
     
     def getOrganizations(self):
         endpoint = self.url + "api/organizations/search"
         reqPublic = self.request.get(endpoint)
+        result = {}
 
         if(reqPublic.status_code == 200):
             data = reqPublic.json()
             print(sViews.ORG_SEARCH, data["paging"]["total"])
 
-            if(input("Dump todo N/s: ") in ("S", "s")): #TODO: incluir flag de dump all
+            if(self._validateQuantity(data["paging"]["total"])):
                 orgPublic = Utils.paging(data, endpoint, self.request)
                 sViews.TOP_LIST(orgPublic, "orgs") # vista top organizaciones publicas
                 self._saveData(orgPublic, "orgs")
+                result["orgPublic"] = orgPublic
+                #print(orgPublic)
+            
+            if(self.dump != None): # token o password para member
+                reqMember = self.request.get(endpoint + "?member=true")
+                if(reqMember.status_code == 200):
+                    dataMember = reqMember.json()
+                    orgMember = Utils.paging(dataMember, endpoint, self.request, "&member=true")
+                    result["orgMember"] = orgMember
 
-            reqMember = self.request.get(endpoint + "?member=true")
-            if(reqMember.status_code == 200):
-                dataMember = reqMember.json()
-                orgMember = Utils.paging(dataMember, endpoint, self.request, "&member=true")
-
-                print(sViews.ORG_SEARCH_MEMBER, len(orgMember))
-                sViews.TOP_LIST(orgMember, "orgs") # vista top organizaciones miembro
-                self._saveData(orgMember, "orgsMember")
-                self.getAuthors(orgMember)
-            else: 
-                print(sViews.ORG_SEARCH_MEMBER_ERROR)
+                    print(sViews.ORG_SEARCH_MEMBER, len(orgMember))
+                    sViews.TOP_LIST(orgMember, "orgs") # vista top organizaciones miembro
+                    self._saveData(orgMember, "orgsMember")
+                    result["authors"] = self.getAuthors(orgMember)
+                else: 
+                    print(sViews.ORG_SEARCH_MEMBER_ERROR)
         else: 
             print(sViews.ORG_SEARCH_ERROR)
+        return result
     
     def getAuthors(self, orgs):
         print(sViews.AUTHORS_SEARCH)
@@ -85,6 +93,21 @@ class Recon():
                 sViews.AUTHORS_SEARCH_DUMP(org["key"], dataAuthors["authors"], t=len(tmp))
             tmp += dataAuthors["authors"]
         self._saveData(authors, "authors")
+        return authors
+    
+    def getProjects(self, orgs):
+        endpoint = self.url + "api/projects/search?organization="
+        pass
+
+    def _validateQuantity(self, quantity):
+        if(self.dump == "all"):
+            return True
+        if(quantity > 10000):
+            print(sViews.QUANTITY_QUESTION, )
+            opt = input()
+            if(opt.lower() != "y"):
+                return False
+        return True
     
     def _saveData(self, data, opt):
         opciones = {
@@ -113,13 +136,3 @@ class Recon():
             f.write(sline)
         print(sViews.DUMP_SAVE, filename)
         f.close()
-    
-    def _saveUsers(self, users):
-        filename = self.path + "users.txt"
-        archivo = open(filename, "w")
-        archivo.write("Login:Name\n")
-        for user in users:
-            tmp = f"{user['login']}:{user['name']}\n"
-            archivo.write(tmp)
-        archivo.close()
-        print(sViews.USERS_SEARCH_SAVE + filename)

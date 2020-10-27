@@ -53,7 +53,8 @@ class InputParser():
             default=True,  # por defecto primero enumera
             help="Enumerar todos los recursos")
         gpActions.add_argument("--dump",
-            action="store_true",
+            action="store",
+            choices=("all","member"),
             help="Dumpear todos los recursos")
 
         # Parametros generales
@@ -81,6 +82,7 @@ class InputParser():
             help="Directorio de resultados")
 
         self.args = parser.parse_args()
+        self._validateMember()
         self.strucURL()
         self._lastChar()
         self.verify_conection()
@@ -116,6 +118,12 @@ class InputParser():
             proxies = {}
         return proxies
     
+    def _validateMember(self):
+        if(self.args.dump == "member"):
+            if(self.args.username == None and self.args.token == None):
+                print(f"{bcolors.FAIL}[-] Para dumpear información asociada debe ingresar un valor de usuario o token{bcolors.ENDC}")
+                exit(0)
+
     def strucURL(self):
         url = self.args.url[0]
         if(not (url.startswith("http://") or url.startswith("https://"))):

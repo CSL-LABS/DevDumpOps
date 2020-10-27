@@ -10,13 +10,14 @@ class SonarViews():
     USERS_SEARCH_ERROR = f"{bc.FAIL}[-] No fue posible enumerar los usuarios... {bc.ENDC}"
     USERS_SEARCH_COUNT = f"{bc.OKGREEN}[+] Total de usuarios enumerados: {bc.ENDC}"
     
-    ORG_SEARCH = f"{bc.OKGREEN}[+] Organizaciones globales enumeradas: {bc.ENDC}"
+    ORG_SEARCH = f"{bc.OKGREEN}[+] Total de organizaciones publicas: {bc.ENDC}"
     ORG_SEARCH_ERROR = f"{bc.FAIL}[-] No fue posible enumerar las organizaciones publicas ...{bc.ENDC}"
-    ORG_SEARCH_MEMBER = f"{bc.OKGREEN}[+] TOP Organizaciones de la cuenta: {bc.ENDC}"
-    ORG_SEARCH_MEMBER_ERROR = f"{bc.FAIL}[-] No fue posible enumerar las organizaciones de la cuenta ...{bc.ENDC}"
+    ORG_SEARCH_MEMBER = f"{bc.OKGREEN}[+] TOP Organizaciones asociadas: {bc.ENDC}"
+    ORG_SEARCH_MEMBER_ERROR = f"{bc.FAIL}[-] No fue posible enumerar las organizaciones asociadas ...{bc.ENDC}"
     DUMP_SAVE = f"{bc.OKBLUE}[\] {bc.HEADER}Datos almacenados en: {bc.ENDC}"
 
     AUTHORS_SEARCH = f"{bc.OKGREEN}[+] TOP autores de ISSUES: {bc.ENDC}"
+    QUANTITY_QUESTION = f"{bc.INPUT}[¿] Quieres extraer todos los registros?{bc.ENDC} Y/n: "
 
     def TOP_LIST(jsonList, opt, top=10):
         if (len(jsonList)<10):
@@ -33,7 +34,7 @@ class SonarViews():
                 print(f"{bc.OKBLUE}[|] {num}: {objIter['login']} -> {objIter['name']} {bc.ENDC}")
 
     def SYS_VERSION(data):
-        return f"{bc.OKBLUE}[|] Version SonarQube: {data['version']} \n[|] ID Server: {data['id']} \n[|] Status: {data['status']} {bc.ENDC}"
+        return f"{bc.OKBLUE}[|] Version SonarQube: {data['version']} \n[|] ID Server: {data['id']} \n[\] Status: {data['status']} {bc.ENDC}"
     
     def AUTHORS_SEARCH_DUMP(org, data, top=10, t=0):
         for x in data:
