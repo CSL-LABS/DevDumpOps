@@ -22,7 +22,11 @@ class SonarController():
         enum = Recon(self.input.url[0], self.sReq, self.input.output, self.input.dump)
         self.sonar.users += enum.getUsers()
         self.sonar.organizations = enum.getOrganizations()
-        print(self.sonar.organizations)
+        if(self.sonar.organizations.get("orgMember") != None):
+            abc = enum.getProjects(self.sonar.organizations["orgMember"])
+            print(abc)
+            print("total proyectos: ", len(abc))
+        #print(self.sonar.organizations)
     
     def _auth(self):
         auth = ""

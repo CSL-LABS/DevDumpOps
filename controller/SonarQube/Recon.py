@@ -60,7 +60,6 @@ class Recon():
                 sViews.TOP_LIST(orgPublic, "orgs") # vista top organizaciones publicas
                 self._saveData(orgPublic, "orgs")
                 result["orgPublic"] = orgPublic
-                #print(orgPublic)
             
             if(self.dump != None): # token o password para member
                 reqMember = self.request.get(endpoint + "?member=true")
@@ -96,8 +95,20 @@ class Recon():
         return authors
     
     def getProjects(self, orgs):
-        endpoint = self.url + "api/projects/search?organization="
-        pass
+        result = []
+        #print(orgs)
+        for org in orgs:
+            endpoint = self.url + "api/projects/search"
+            getParam = "organization=" + org["key"]
+            dataProject = self.request.get(endpoint + "?" + getParam)
+
+            if(dataProject.status_code == 200):
+                info = dataProject.json()
+                projects = Utils.paging(info, endpoint, self.request, params="&"+getParam)
+                result += projects
+        #TODO: save projects
+        #TODO: views projects
+        return result
 
     def _validateQuantity(self, quantity):
         if(self.dump == "all"):
