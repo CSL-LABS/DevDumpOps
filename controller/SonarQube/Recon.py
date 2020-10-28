@@ -122,6 +122,20 @@ class Recon():
             print(sViews.CURRENT_USER + info["login"])
             print(sViews.USERS_TOKEN_SEARCH + str(len(info["userTokens"])))
             self._saveData(info["userTokens"], "userTokens")
+    
+    def getWebHooks(self, projects):
+        print(sViews.WEBHOOKS_SEARCH, len(projects))
+        result = []
+        for pj in projects: 
+            endpoint = self.url + "api/webhooks/list?organization={}&project={}".format(pj["organization"], pj["key"])
+            dataReq = self.request.get(endpoint)
+            if(dataReq.status_code == 200):
+                info = dataReq.json()
+                if(info["webhooks"]):
+                    result += info["webhooks"]
+        if(result):
+            self._saveData(result, "webHooks")
+        return result 
 
     def _validateQuantity(self, quantity):
         if(self.dump == "all"):
@@ -140,7 +154,8 @@ class Recon():
             "orgsMember" : ["orgs_member.txt", "ORGANIZATION:NAME:ADMIN:DELETE:PROVISION\n"],
             "authors": ["authors.txt", "AUTHORS\n"],
             "projects": ["projects.txt", "ORGANIZATION:PROJECT:NAME\n"],
-            "userTokens": ["userTokens.txt", "NAME-TOKENS:CREATED-AT\n"]
+            "userTokens": ["userTokens.txt", "NAME-TOKENS:CREATED-AT\n"],
+            "webHooks": ["webHooks.txt", "NAME:URL:SECRET\n"]
         }
         select = opciones[opt]
 
@@ -163,6 +178,11 @@ class Recon():
                 sline = f"{dataIter['organization']}:{dataIter['key']}:{dataIter['name']}\n"
             elif(opt == "userTokens"):
                 sline = f"{dataIter['name']}:{dataIter['createdAt']}\n"
+            elif(opt == "webHooks"):
+                tmp = ""
+                if(dataIter.get("secret") != None):
+                    tmp = dataIter["secret"]
+                sline = f"{dataIter['name']}:{dataIter['url']}:{tmp}\n"
             f.write(sline)
         print(sViews.DUMP_SAVE, filename)
         f.close()

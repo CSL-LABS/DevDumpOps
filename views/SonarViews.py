@@ -22,6 +22,7 @@ class SonarViews():
     PROJECTS_TOTAL = f"{bc.OKBLUE}[|] Total proyectos: {bc.ENDC}"
     CURRENT_USER = f"{bc.OKGREEN}[+] Usuario actual: {bc.ENDC}"
     USERS_TOKEN_SEARCH = f"{bc.OKBLUE}[|] Tokens creados por el usuario: {bc.ENDC}"
+    WEBHOOKS_SEARCH = f"{bc.OKGREEN}[+] Buscando WebHooks de Projectos: {bc.ENDC}"
 
     def TOP_LIST(jsonList, opt, top=10):
         if (len(jsonList)<10):

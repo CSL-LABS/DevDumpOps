@@ -27,6 +27,8 @@ class SonarController():
             self.sonar.projects = enum.getProjects(self.sonar.organizations["orgMember"])
         else:
             self.sonar.projects = enum.getProjects(self.sonar.organizations["orgPublic"])
+        
+        self.sonar.webhooks = enum.getWebHooks(self.sonar.projects)
     
     def _auth(self):
         auth = ""
