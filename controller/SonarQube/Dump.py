@@ -1,6 +1,10 @@
 
 class Dump():
-    pass
+    
+    def __init__(self, url, request, path, dump):
+        self.path = path + "/dump/"
+        self.url = url
+        self.dump = dump
 
     def dump(self, output):
         #logica - DUMP
@@ -34,15 +38,6 @@ class Dump():
 
         with open(path, "wb") as f:
             f.write(data.content)
-    
-    # Lista todas las organizaciones
-    def getOrganizations(self):
-        print(f"{bcolors.OKGREEN}[+] Enumerando las organizaciones...{bcolors.ENDC}")
-        endpoint = self.url + "api/notifications/list"
-        data = self.sReq.get(endpoint)
-        info = data.json()
-        self.sonar.organizations = info["organizations"]
-        print(f"{bcolors.WARNING}[+] >>> Un total de {len(self.sonar.organizations)} organizaciones...{bcolors.ENDC}")
 
     # Lista los componentes
     def getComponents(self):
@@ -54,23 +49,3 @@ class Dump():
             info = data.json()
             self.sonar.components += self._paging(info, endpoint, params)
         print(f"{bcolors.WARNING}[+] >>> Un total de {len(self.sonar.components)} componentes de codigo...{bcolors.ENDC}")
-    
-    def _paging(self, data, url, params=""):
-        # crear el paging _ extraer los demas datos
-        key = list(data.keys())
-        superior = 1
-        page = 1 
-        info = []
-        if (len(key) == 2 and ("paging" in key)):
-            key.remove("paging")
-            key = key[0]
-            superior = math.ceil(data["paging"]["total"]/500)
-            
-            for x in range(page, superior+1):
-                print(url+"?p={}&ps=500".format(x)+params)
-                tmp = self.sReq.get(url+"?p={}&ps=500".format(x)+params)
-                tmp2 = tmp.json()
-                info += tmp2[key]
-            
-            return info
-        return data

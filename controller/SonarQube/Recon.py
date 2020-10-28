@@ -10,6 +10,7 @@ class Recon():
         self.request = request
         self.isVisibilityWs()
         self.getVersion()
+        self.getUserToken()
 
     def isVisibilityWs(self):
         endpoint = self.url + "api/webservices/list" 
@@ -95,8 +96,9 @@ class Recon():
         return authors
     
     def getProjects(self, orgs):
+        print(sViews.PROJECTS_SEARCH)
         result = []
-        #print(orgs)
+        i = 0
         for org in orgs:
             endpoint = self.url + "api/projects/search"
             getParam = "organization=" + org["key"]
@@ -104,11 +106,22 @@ class Recon():
 
             if(dataProject.status_code == 200):
                 info = dataProject.json()
+                sViews.SHOW_PROJECT(i, org["key"], info["paging"]["total"])
                 projects = Utils.paging(info, endpoint, self.request, params="&"+getParam)
                 result += projects
-        #TODO: save projects
-        #TODO: views projects
+            i+=1
+        print(sViews.PROJECTS_TOTAL + str(len(result)))
+        self._saveData(result, "projects")
         return result
+    
+    def getUserToken(self):
+        endpoint = self.url + "api/user_tokens/search"
+        dataReq = self.request.get(endpoint)
+        if(dataReq.status_code == 200):
+            info = dataReq.json()
+            print(sViews.CURRENT_USER + info["login"])
+            print(sViews.USERS_TOKEN_SEARCH + str(len(info["userTokens"])))
+            self._saveData(info["userTokens"], "userTokens")
 
     def _validateQuantity(self, quantity):
         if(self.dump == "all"):
@@ -125,7 +138,9 @@ class Recon():
             "users": ["users.txt", "LOGIN:NAME\n"],
             "orgs": ["orgs_public.txt", "ORGANIZATION:NAME\n"],
             "orgsMember" : ["orgs_member.txt", "ORGANIZATION:NAME:ADMIN:DELETE:PROVISION\n"],
-            "authors": ["authors.txt", "AUTHORS\n"]
+            "authors": ["authors.txt", "AUTHORS\n"],
+            "projects": ["projects.txt", "ORGANIZATION:PROJECT:NAME\n"],
+            "userTokens": ["userTokens.txt", "NAME-TOKENS:CREATED-AT\n"]
         }
         select = opciones[opt]
 
@@ -144,6 +159,10 @@ class Recon():
                 sline = "\nORGANIZATION: " + dataIter + "\n"
                 for x in data[dataIter]:
                     sline += f"{x}\n"
+            elif(opt == "projects"):
+                sline = f"{dataIter['organization']}:{dataIter['key']}:{dataIter['name']}\n"
+            elif(opt == "userTokens"):
+                sline = f"{dataIter['name']}:{dataIter['createdAt']}\n"
             f.write(sline)
         print(sViews.DUMP_SAVE, filename)
         f.close()

@@ -18,6 +18,10 @@ class SonarViews():
 
     AUTHORS_SEARCH = f"{bc.OKGREEN}[+] TOP autores de ISSUES: {bc.ENDC}"
     QUANTITY_QUESTION = f"{bc.INPUT}[¿] Quieres extraer todos los registros?{bc.ENDC} Y/n: "
+    PROJECTS_SEARCH = f"{bc.OKGREEN}[+] Total proyectos enumerados: {bc.ENDC}"
+    PROJECTS_TOTAL = f"{bc.OKBLUE}[|] Total proyectos: {bc.ENDC}"
+    CURRENT_USER = f"{bc.OKGREEN}[+] Usuario actual: {bc.ENDC}"
+    USERS_TOKEN_SEARCH = f"{bc.OKBLUE}[|] Tokens creados por el usuario: {bc.ENDC}"
 
     def TOP_LIST(jsonList, opt, top=10):
         if (len(jsonList)<10):
@@ -42,3 +46,7 @@ class SonarViews():
             if(t<top):
                 print(f"{bc.OKBLUE}[|] {num}: {x} {bc.ENDC}")
             t += 1
+    
+    def SHOW_PROJECT(x, org, total):
+        num = f"{bc.OKGREEN}{x}{bc.OKBLUE}"
+        print(f"{bc.OKBLUE}[|] {num}: {org} -> {total} {bc.ENDC}")
