@@ -1,5 +1,6 @@
 from views.SonarViews import SonarViews as sViews
 from controller.SonarQube.Utils import Utils
+from config.Config import Config
 
 class Recon():
     
@@ -11,6 +12,7 @@ class Recon():
         self.isVisibilityWs()
         self.getVersion()
         self.getUserToken()
+        self.getSettings()
 
     def isVisibilityWs(self):
         endpoint = self.url + "api/webservices/list" 
@@ -135,7 +137,21 @@ class Recon():
                     result += info["webhooks"]
         if(result):
             self._saveData(result, "webHooks")
-        return result 
+        return result
+    
+    def getSettings(self):
+        endpoint = self.url + "api/settings/values"
+        dataReq = self.request.get(endpoint)
+
+        if(dataReq.status_code == 200):
+            settings = dataReq.json()
+            for opt in Config.SONARQUBE_API_SETTINGS:
+                print(sViews.SETTINGS_OPT + opt)
+                for key in settings["settings"]:
+                    if(key["key"] in Config.SONARQUBE_API_SETTINGS[opt]):
+                        sViews.ONE_SETTING(key["key"], key["value"])
+        else: 
+            print(sViews.SETTINGS_ERROR)
 
     def _validateQuantity(self, quantity):
         if(self.dump == "all"):

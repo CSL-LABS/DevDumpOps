@@ -24,6 +24,12 @@ class SonarViews():
     USERS_TOKEN_SEARCH = f"{bc.OKBLUE}[|] Tokens creados por el usuario: {bc.ENDC}"
     WEBHOOKS_SEARCH = f"{bc.OKGREEN}[+] Buscando WebHooks de Projectos: {bc.ENDC}"
 
+    SETTINGS_OPT = f"{bc.OKGREEN}[+] Configuracion: {bc.ENDC}"
+    SETTINGS_ERROR = f"{bc.FAIL}[-] No fue posible enumerar la configuracion ...{bc.ENDC}"
+
+    def ONE_SETTING(componente, value):
+        print(f"{bc.OKBLUE}[|] {componente}:{bc.ENDC} {value}")
+
     def TOP_LIST(jsonList, opt, top=10):
         if (len(jsonList)<10):
             top = len(jsonList)
