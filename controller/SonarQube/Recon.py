@@ -11,7 +11,7 @@ class Recon():
         self.request = request
         self.isVisibilityWs()
         self.getVersion()
-        self.getUserToken()
+        #self.getUserToken()
         self.getSettings()
 
     def isVisibilityWs(self):
@@ -49,10 +49,10 @@ class Recon():
             print(sViews.USERS_SEARCH_ERROR)
         return users
     
-    def getOrganizations(self):
+    def getOrganizationsPublic(self):
         endpoint = self.url + "api/organizations/search"
         reqPublic = self.request.get(endpoint)
-        result = {}
+        result = []
 
         if(reqPublic.status_code == 200):
             data = reqPublic.json()
@@ -62,23 +62,26 @@ class Recon():
                 orgPublic = Utils.paging(data, endpoint, self.request)
                 sViews.TOP_LIST(orgPublic, "orgs") # vista top organizaciones publicas
                 self._saveData(orgPublic, "orgs")
-                result["orgPublic"] = orgPublic
-            
-            if(self.dump != None): # token o password para member
-                reqMember = self.request.get(endpoint + "?member=true")
-                if(reqMember.status_code == 200):
-                    dataMember = reqMember.json()
-                    orgMember = Utils.paging(dataMember, endpoint, self.request, "&member=true")
-                    result["orgMember"] = orgMember
-
-                    print(sViews.ORG_SEARCH_MEMBER, len(orgMember))
-                    sViews.TOP_LIST(orgMember, "orgs") # vista top organizaciones miembro
-                    self._saveData(orgMember, "orgsMember")
-                    result["authors"] = self.getAuthors(orgMember)
-                else: 
-                    print(sViews.ORG_SEARCH_MEMBER_ERROR)
+                result += orgPublic
         else: 
             print(sViews.ORG_SEARCH_ERROR)
+        return result
+    
+    def getOrganizationsMember(self):
+        endpoint = self.url + "api/organizations/search"
+        reqMember = self.request.get(endpoint + "?member=true")
+        result = []
+        if(reqMember.status_code == 200):
+            dataMember = reqMember.json()
+            orgMember = Utils.paging(dataMember, endpoint, self.request, "&member=true")
+            result += orgMember
+
+            print(sViews.ORG_SEARCH_MEMBER, len(orgMember))
+            sViews.TOP_LIST(orgMember, "orgs") # vista top organizaciones miembro
+            self._saveData(orgMember, "orgsMember")
+            #result["authors"] = self.getAuthors(orgMember)
+        else: 
+            print(sViews.ORG_SEARCH_MEMBER_ERROR)
         return result
     
     def getAuthors(self, orgs):

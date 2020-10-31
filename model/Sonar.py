@@ -3,10 +3,12 @@ class Sonar():
     def __init__(self, url):
         self.url = url
 
+        self.authors = []
         self.components = []
         self.issues = {}
         self.notifications = {}
-        self.organizations = []
+        self.organizationsPublic = []
+        self.organizationsMember = []
         self.permission = {}
         self.plugins = {}
         self.projects = {}
