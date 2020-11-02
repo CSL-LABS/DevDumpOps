@@ -22,10 +22,16 @@ class SonarViews():
     PROJECTS_TOTAL = f"{bc.OKBLUE}[|] Total proyectos: {bc.ENDC}"
     CURRENT_USER = f"{bc.OKGREEN}[+] Usuario actual: {bc.ENDC}"
     USERS_TOKEN_SEARCH = f"{bc.OKBLUE}[|] Tokens creados por el usuario: {bc.ENDC}"
-    WEBHOOKS_SEARCH = f"{bc.OKGREEN}[+] Buscando WebHooks de Projectos: {bc.ENDC}"
+    WEBHOOKS_SEARCH = f"{bc.OKGREEN}[+] Buscando WebHooks de Proyectos: {bc.ENDC}"
 
     SETTINGS_OPT = f"{bc.OKGREEN}[+] Configuracion: {bc.ENDC}"
-    SETTINGS_ERROR = f"{bc.FAIL}[-] No fue posible enumerar la configuracion ...{bc.ENDC}"
+    SETTINGS_ERROR = f"{bc.FAIL}[-] No fue posible enumerar la configuracion ...{bc.ENDC}" 
+
+    DUMP = f"{bc.OKGREEN}[+] Proceso de extraccion de informacion: OK{bc.ENDC}"
+    DUMP_COMPONENTS = f"{bc.OKGREEN}[+] Extrayendo los componentes por organizacion: {bc.ENDC}"
+    DUMP_COMPONENTS_TOTAL = f"{bc.OKBLUE}[|] Componentes enumerados: {bc.ENDC}"
+    DUMP_COMPONENTS_ERROR = f"{bc.FAIL}[-] No fue posible enumerar los componentes de la organizacion: {bc.ENDC}"
+    DUMP_SOURCE_RAW = f"{bc.OKGREEN}[+] Extrayendo el codigo fuente: {bc.ENDC}"
 
     def ONE_SETTING(componente, value):
         print(f"{bc.OKBLUE}[|] {componente}:{bc.ENDC} {value}")

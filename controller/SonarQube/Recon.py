@@ -167,16 +167,8 @@ class Recon():
         return True
     
     def _saveData(self, data, opt):
-        opciones = {
-            "users": ["users.txt", "LOGIN:NAME\n"],
-            "orgs": ["orgs_public.txt", "ORGANIZATION:NAME\n"],
-            "orgsMember" : ["orgs_member.txt", "ORGANIZATION:NAME:ADMIN:DELETE:PROVISION\n"],
-            "authors": ["authors.txt", "AUTHORS\n"],
-            "projects": ["projects.txt", "ORGANIZATION:PROJECT:NAME\n"],
-            "userTokens": ["userTokens.txt", "NAME-TOKENS:CREATED-AT\n"],
-            "webHooks": ["webHooks.txt", "NAME:URL:SECRET\n"]
-        }
-        select = opciones[opt]
+        #TODO: mejorar esta funcion, es muy compleja de leer/seguir
+        select = Config.SONARQUBE_FILE_SAVE_RECON[opt]
 
         filename = self.path + select[0]
         f = open(filename, "w")

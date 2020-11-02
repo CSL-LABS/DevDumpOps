@@ -1,51 +1,65 @@
+from views.SonarViews import SonarViews as sViews
+from controller.SonarQube.Utils import Utils
+from config.Config import Config
+import os
 
 class Dump():
     
-    def __init__(self, url, request, path, dump):
+    def __init__(self, url, request, path):
         self.path = path + "/dump/"
         self.url = url
-        self.dump = dump
-
-    def dump(self, output):
-        #logica - DUMP
-        self.getOrganizations()
-        self.getComponents()
-        cont = 0
-        print(f"{bcolors.OKGREEN}[+] Dumpeando todos los archivos....{bcolors.ENDC}")
-
-        for component in self.sonar.components: 
-            cont += 1
-            key = component["key"]
-            tmpPath = (component["organization"] + "/" + key.replace(":","/")).split("/")
-            tmpPath.pop()
-            localPath = output + "/".join(tmpPath)
-
-            if not os.path.exists(localPath):
-                os.makedirs(localPath)
-            self.getSourceRaw(key, localPath + "/" + component["name"])
-
-        print(f"{bcolors.WARNING}[+] >>> Archivos Descargados completamente....{bcolors.ENDC}")
-        print(f"{bcolors.OKBLUE}[+] Se descargaron {cont} archivos, de {len(self.sonar.organizations)} organizaciones....{bcolors.ENDC}")
-        print(f"{bcolors.OKBLUE}[+] Resultados almacenados en {output}....{bcolors.ENDC}")
+        self.request = request
     
     # Descarga codigo por key
-    def getSourceRaw(self, key, path):
+    def getSourceRaw(self, component):
         # TODO: ¿los archivos antiguos?
         # ¿¿cada version sera un proyecto diferente?? 
         # o debo validar que no este sobreescribiendo archivos
+        path = self._validatePath(component)
+        path += "/" + component["name"]
         endpoint = self.url + "api/sources/raw?key="
-        data = self.sReq.get(endpoint + key)
+        data = self.request.get(endpoint + component["key"])
 
         with open(path, "wb") as f:
             f.write(data.content)
 
     # Lista los componentes
-    def getComponents(self):
-        print(f"{bcolors.OKGREEN}[+] Enumerando los componentes de codigo ...{bcolors.ENDC}")
+    def getComponents(self, orgs):
+        print(sViews.DUMP_COMPONENTS)
         endpoint = self.url + "api/components/search"
-        for org in self.sonar.organizations:
+        result = []
+        for org in orgs:
             params = "&qualifiers=FIL&organization={}".format(org["key"])
-            data = self.sReq.get(endpoint + "?" + params[1:])
-            info = data.json()
-            self.sonar.components += self._paging(info, endpoint, params)
-        print(f"{bcolors.WARNING}[+] >>> Un total de {len(self.sonar.components)} componentes de codigo...{bcolors.ENDC}")
+            data = self.request.get(endpoint + "?" + params[1:]) 
+            if(data.status_code == 200):
+                info = data.json()
+                result += Utils.paging(info, endpoint, self.request, params)
+            else:
+                print(sViews.DUMP_COMPONENTS_ERROR + org["key"])
+        print(sViews.DUMP_COMPONENTS_TOTAL, len(result))
+        self._saveData(result, "components")
+        print(sViews.DUMP_SOURCE_RAW, len(result), " archivos de codigo")
+        return result
+    
+    def _validatePath(self, component):
+        print(component)
+        key = component["key"]
+        tmpPath = (component["organization"] + "/" + key.replace(":","/")).split("/")
+        tmpPath.pop()
+        localPath = self.path + "/".join(tmpPath)
+        if not os.path.exists(localPath):
+            os.makedirs(localPath)
+        return localPath
+    
+    def _saveData(self, data, opt):
+        select = Config.SONARQUBE_FILE_SAVE_DUMP[opt]
+
+        filename = self.path + select[0]
+        f = open(filename, "w")
+        f.write(select[1])
+        for dataIter in data:
+            if(opt == "components"):
+                sline = f"{dataIter['organization']}:{dataIter['project']}:{dataIter['key']}\n"
+            f.write(sline)
+        print(sViews.DUMP_SAVE, filename)
+        f.close()
