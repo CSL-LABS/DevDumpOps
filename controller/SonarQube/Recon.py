@@ -11,7 +11,6 @@ class Recon():
         self.request = request
         self.isVisibilityWs()
         self.getVersion()
-        #self.getUserToken()
         self.getSettings()
 
     def isVisibilityWs(self):
@@ -29,7 +28,7 @@ class Recon():
         req = self.request.get(endpoint)
         if (req.status_code == 200):
             data = req.json()
-            print(sViews.SYS_VERSION(data))
+            sViews.SYS_VERSION(data)
         else:
             print(sViews.SYS_ERROR)
 
@@ -79,7 +78,6 @@ class Recon():
             print(sViews.ORG_SEARCH_MEMBER, len(orgMember))
             sViews.TOP_LIST(orgMember, "orgs") # vista top organizaciones miembro
             self._saveData(orgMember, "orgsMember")
-            #result["authors"] = self.getAuthors(orgMember)
         else: 
             print(sViews.ORG_SEARCH_MEMBER_ERROR)
         return result
@@ -160,9 +158,10 @@ class Recon():
         if(self.dump == "all"):
             return True
         if(quantity > 10000):
-            print(sViews.QUANTITY_QUESTION, )
-            opt = input()
-            if(opt.lower() != "y"):
+            print(sViews.QUANTITY_BEGIN, end="")
+            opt = input(sViews.QUANTITY_QUESTION)
+            print(sViews.QUANTITY_END, end="")
+            if(opt.lower().startswith != "y"):
                 return False
         return True
     

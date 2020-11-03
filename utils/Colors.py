@@ -7,7 +7,7 @@ class Colors():
     colorama.init()
     # TODO: agregar mas colores 
     # Referencia: https://pypi.org/project/colorama/ 
-    HEADER = '\033[43m'
+    HEADER = '\033[47m'
     INPUT = '\033[95m'
     OKBLUE = '\033[94m'
     OKGREEN = '\033[92m'

@@ -4,12 +4,9 @@
 import requests
 import base64
 from model.Sonar import Sonar
+from utils.Utils import Utils
 from controller.SonarQube.Recon import Recon
 from controller.SonarQube.Dump import Dump
-from utils.Colors import Colors
-
-# paleta de colores
-bcolors = Colors()
 
 class SonarController():
     def __init__(self, input):
@@ -38,14 +35,19 @@ class SonarController():
             self.sonar.projects = enum.getProjects(self.sonar.organizationsPublic)
     
     def dumpInformation(self):
+        i = 1
         dumpInfo = Dump(self.input.url[0], self.sReq, self.input.output)
+
         if(self.input.dump == "member"):
             self.sonar.components += dumpInfo.getComponents(self.sonar.organizationsMember)
         else:
             self.sonar.components += dumpInfo.getComponents(self.sonar.organizationsPublic)
+        
         for comp in self.sonar.components:
-            # TODO: Hacer una barra de progreso
-            dumpInfo.getSourceRaw(comp)    
+            dumpInfo.getSourceRaw(comp)
+            Utils().printProgressBar(i, len(self.sonar.components))
+            i += 1
+        print("[+] SONAR DUMP: COMPLETED")
 
     def _auth(self):
         auth = ""

@@ -17,4 +17,3 @@ class Core():
         sonar.enumeration()
         if(self.input.dump != None): #TODO: agregar opciones del dump
             sonar.dumpInformation()
-        print("TERMINADO EL DUMP DE SONARQUBE")

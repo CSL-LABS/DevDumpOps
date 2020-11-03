@@ -9,6 +9,7 @@ class Dump():
         self.path = path + "/dump/"
         self.url = url
         self.request = request
+        print(sViews.DUMP)
     
     # Descarga codigo por key
     def getSourceRaw(self, component):
@@ -38,11 +39,10 @@ class Dump():
                 print(sViews.DUMP_COMPONENTS_ERROR + org["key"])
         print(sViews.DUMP_COMPONENTS_TOTAL, len(result))
         self._saveData(result, "components")
-        print(sViews.DUMP_SOURCE_RAW, len(result), " archivos de codigo")
+        print(sViews.DUMP_SOURCE_RAW, len(result), " files")
         return result
     
     def _validatePath(self, component):
-        print(component)
         key = component["key"]
         tmpPath = (component["organization"] + "/" + key.replace(":","/")).split("/")
         tmpPath.pop()

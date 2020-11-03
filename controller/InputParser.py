@@ -99,7 +99,7 @@ class InputParser():
         proxy = self.armerProxy()
         if(not Utils().testVisibility(self.args.url[0], proxy)):
             exit(0)
-        print(f"{bcolors.OKGREEN}[+] Visibilidad Verificada{bcolors.ENDC}")
+        print(f"{bcolors.OKGREEN}[+] VISIBILITY: {bcolors.ENDC}OK")
     
     def armerProxy(self):
         if(self.args.phost != None):
