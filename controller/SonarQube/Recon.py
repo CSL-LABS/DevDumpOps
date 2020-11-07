@@ -1,5 +1,6 @@
 from views.SonarViews import SonarViews as sViews
 from controller.SonarQube.Utils import Utils
+from utils.Utils import Utils as pg
 from config.Config import Config
 
 class Recon():
@@ -41,7 +42,7 @@ class Recon():
             print(sViews.USERS_SEARCH_COUNT + str(data["paging"]["total"])) # TODO: mejorar vista top user
 
             if(self._validateQuantity(data["paging"]["total"])):
-                users = Utils.paging(data, endpoint, self.request)
+                users = Utils.paging(data, endpoint, self.request, progress=True)
                 sViews.TOP_LIST(users, "users")
                 self._saveData(users, "users")
         else: 
@@ -58,7 +59,7 @@ class Recon():
             print(sViews.ORG_SEARCH, data["paging"]["total"])
 
             if(self._validateQuantity(data["paging"]["total"])):
-                orgPublic = Utils.paging(data, endpoint, self.request)
+                orgPublic = Utils.paging(data, endpoint, self.request, progress=True)
                 sViews.TOP_LIST(orgPublic, "orgs") # vista top organizaciones publicas
                 self._saveData(orgPublic, "orgs")
                 result += orgPublic
@@ -99,20 +100,24 @@ class Recon():
         return authors
     
     def getProjects(self, orgs):
-        print(sViews.PROJECTS_SEARCH)
+        print(sViews.PROJECTS_SEARCH + f" OF {len(orgs)} ORGANIZATIONS:")
         result = []
         i = 0
-        for org in orgs:
-            endpoint = self.url + "api/projects/search"
-            getParam = "organization=" + org["key"]
-            dataProject = self.request.get(endpoint + "?" + getParam)
+        if(self._validateQuantity(len(orgs))):
+            for org in orgs:
+                endpoint = self.url + "api/components/search_projects"
+                getParam = "organization=" + org["key"]
+                dataProject = self.request.get(endpoint + "?" + getParam)
 
-            if(dataProject.status_code == 200):
-                info = dataProject.json()
-                sViews.SHOW_PROJECT(i, org["key"], info["paging"]["total"])
-                projects = Utils.paging(info, endpoint, self.request, params="&"+getParam)
-                result += projects
-            i+=1
+                if(len(orgs) > 1000 and i > 10):
+                    pg().printProgressBar(i, len(orgs))
+
+                if(dataProject.status_code == 200):
+                    info = dataProject.json()
+                    sViews.SHOW_PROJECT(i, org["key"], info["paging"]["total"])
+                    projects = Utils.paging(info, endpoint, self.request, params="&"+getParam)
+                    result += projects
+                i+=1
         print(sViews.PROJECTS_TOTAL + str(len(result)))
         self._saveData(result, "projects")
         return result
@@ -161,7 +166,7 @@ class Recon():
             print(sViews.QUANTITY_BEGIN, end="")
             opt = input(sViews.QUANTITY_QUESTION)
             print(sViews.QUANTITY_END, end="")
-            if(opt.lower().startswith != "y"):
+            if(not opt.lower().startswith("y")):
                 return False
         return True
     
@@ -170,7 +175,7 @@ class Recon():
         select = Config.SONARQUBE_FILE_SAVE_RECON[opt]
 
         filename = self.path + select[0]
-        f = open(filename, "w")
+        f = open(filename, "w", encoding="utf-8")
         f.write(select[1])
         for dataIter in data:
             if(opt == "users"):

@@ -24,25 +24,21 @@ class SonarController():
             if(self.input.dump == "member"):
                 self.sonar.organizationsMember = enum.getOrganizationsMember()
                 self.sonar.authors += enum.getAuthors(self.sonar.organizationsMember)
-                self.projects = enum.getProjects(self.sonar.organizationsMember)
+                self.sonar.projects = enum.getProjects(self.sonar.organizationsMember)
             else:
                 self.sonar.organizationsPublic = enum.getOrganizationsPublic()
                 self.sonar.authors += enum.getAuthors(self.sonar.organizationsPublic)
                 self.sonar.projects = enum.getProjects(self.sonar.organizationsPublic)
             self.sonar.webhooks = enum.getWebHooks(self.sonar.projects)
-        elif(self.input.dump != "member"): 
+        else: 
             self.sonar.organizationsPublic = enum.getOrganizationsPublic()
             self.sonar.projects = enum.getProjects(self.sonar.organizationsPublic)
     
     def dumpInformation(self):
         i = 1
         dumpInfo = Dump(self.input.url[0], self.sReq, self.input.output)
+        self.sonar.components += dumpInfo.getComponents(self.sonar.projects)
 
-        if(self.input.dump == "member"):
-            self.sonar.components += dumpInfo.getComponents(self.sonar.organizationsMember)
-        else:
-            self.sonar.components += dumpInfo.getComponents(self.sonar.organizationsPublic)
-        
         for comp in self.sonar.components:
             dumpInfo.getSourceRaw(comp)
             Utils().printProgressBar(i, len(self.sonar.components))

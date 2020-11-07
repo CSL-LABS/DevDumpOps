@@ -25,18 +25,19 @@ class Dump():
             f.write(data.content)
 
     # Lista los componentes
-    def getComponents(self, orgs):
+    def getComponents(self, projects):
         print(sViews.DUMP_COMPONENTS)
-        endpoint = self.url + "api/components/search"
+        endpoint = self.url + "api/components/tree"
         result = []
-        for org in orgs:
-            params = "&qualifiers=FIL&organization={}".format(org["key"])
+        for comp in projects:
+            #print(comp)
+            params = "&qualifiers=FIL&strategy=all&component={}".format(comp["key"])
             data = self.request.get(endpoint + "?" + params[1:]) 
             if(data.status_code == 200):
                 info = data.json()
                 result += Utils.paging(info, endpoint, self.request, params)
             else:
-                print(sViews.DUMP_COMPONENTS_ERROR + org["key"])
+                print(sViews.DUMP_COMPONENTS_ERROR + comp["key"])
         print(sViews.DUMP_COMPONENTS_TOTAL, len(result))
         self._saveData(result, "components")
         print(sViews.DUMP_SOURCE_RAW, len(result), " files")
@@ -55,11 +56,11 @@ class Dump():
         select = Config.SONARQUBE_FILE_SAVE_DUMP[opt]
 
         filename = self.path + select[0]
-        f = open(filename, "w")
+        f = open(filename, "w", encoding="utf-8")
         f.write(select[1])
         for dataIter in data:
             if(opt == "components"):
-                sline = f"{dataIter['organization']}:{dataIter['project']}:{dataIter['key']}\n"
+                sline = f"{dataIter['organization']}:{dataIter['key']}\n"
             f.write(sline)
         print(sViews.DUMP_SAVE, filename)
         f.close()

@@ -121,7 +121,7 @@ class InputParser():
     def _validateMember(self):
         if(self.args.dump == "member"):
             if(self.args.username == None and self.args.token == None):
-                print(f"{bcolors.FAIL}[-] Para dumpear información asociada debe ingresar un valor de usuario o token{bcolors.ENDC}")
+                print(f"{bcolors.FAIL}[-] Dump - member: Requires credentials{bcolors.ENDC}")
                 exit(0)
 
     def strucURL(self):
@@ -141,6 +141,5 @@ class InputParser():
 {bcolors.WARNING}o-o   o-o   o   {bcolors.OKBLUE}o-o   o--o o o o O-o  {bcolors.OKGREEN} o-o  O-o  o-o 
    {bcolors.FAIL}@csl-labs /|\ csl@csl.com.co  {bcolors.OKBLUE}|          {bcolors.OKGREEN}|        
                                  {bcolors.OKBLUE}o          {bcolors.OKGREEN}o        
- 
 {bcolors.ENDC}"""
         print(banner)

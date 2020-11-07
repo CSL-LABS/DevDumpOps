@@ -10,7 +10,7 @@ class Config():
             "webHooks": ["webHooks.txt", "NAME:URL:SECRET\n"]
     }
     SONARQUBE_FILE_SAVE_DUMP = {
-            "components": ["components.txt", "ORGANIZATION:PROJECT:KEY\n"]
+            "components": ["components.txt", "ORGANIZATION:PROJECT:PATH\n"]
     } 
     SONARQUBE_API_SETTINGS = {
             "EMAIL": ["email.fromName", "email.from", "email.prefix", "email.smtp_port.secured", 

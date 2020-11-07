@@ -21,7 +21,7 @@ class SonarViews():
     QUANTITY_END = f"{bc.ENDC}"
 
     AUTHORS_SEARCH = f"{bc.OKGREEN}[+] TOP - ISSUES AUTHORS: {bc.ENDC}"
-    PROJECTS_SEARCH = f"{bc.OKGREEN}[+] PROJECTS ENUMERATION: {bc.ENDC}"
+    PROJECTS_SEARCH = f"{bc.OKGREEN}[+] PROJECTS ENUMERATION{bc.ENDC}"
     PROJECTS_TOTAL = f"{bc.OKBLUE}  [|] Total projects: {bc.ENDC}"
     CURRENT_USER = f"{bc.OKGREEN}[+] CURRENT USER: {bc.ENDC}"
     USERS_TOKEN_SEARCH = f"{bc.OKBLUE}  [|] Tokens of user: {bc.ENDC}"
@@ -33,8 +33,12 @@ class SonarViews():
     DUMP = f"{bc.OKGREEN}[+] DUMP INFO: {bc.ENDC}"
     DUMP_COMPONENTS = f"{bc.OKBLUE}  [|] Component extraction: {bc.ENDC} OK"
     DUMP_COMPONENTS_TOTAL = f"{bc.OKBLUE}  [|] Component enumeration: {bc.ENDC}"
-    DUMP_COMPONENTS_ERROR = f"{bc.FAIL}[-] Component enumeration: NOT AUTHORIZED | {bc.ENDC}"
+    DUMP_COMPONENTS_ERROR = f"{bc.FAIL}  [-] Component enumeration: NOT AUTHORIZED | {bc.ENDC}"
     DUMP_SOURCE_RAW = f"{bc.OKGREEN}[+] DOWNLOAD SOURCE CODE: {bc.ENDC}"
+
+    SONAR_COMPLETED = f"{bc.OKGREEN}[+] SONAR DUMP: COMPLETED \n  {bc.ENDC}"
+
+    PAGING_ERROR = f"{bc.FAIL}  [-] 10.000 records passed{bc.ENDC}"
 
     def ONE_SETTING(componente, value):
         print(f"{bc.OKBLUE}  [|] {componente}:{bc.ENDC} {value}")
@@ -50,8 +54,8 @@ class SonarViews():
             num = f"{bc.OKGREEN}{x+1}{bc.OKBLUE}"
             if(opt == "orgs"): 
                 if(objIter.get("actions") != None):
-                    action = objIter['actions']
-                    print(f"{bc.OKBLUE}  [|] {num}: {objIter['key']} {g}| Desc: {b}{objIter['name']} {g}| Act: {b}{action}{bc.ENDC}")
+                    tmp = str(objIter['actions']).replace("True","T").replace("False","F")
+                    print(f"{bc.OKBLUE}  [|] {num}: {objIter['key']} {g}| Desc: {b}{objIter['name']} {g}| Act: {b}{tmp}{bc.ENDC}")
             elif(opt == "users"):
                 print(f"{bc.OKBLUE}  [|] {num}: {objIter['login']} {g}| Name: {b}{objIter['name']} {bc.ENDC}")
 
@@ -70,5 +74,6 @@ class SonarViews():
     def SHOW_PROJECT(x, org, total):
         g = f"{bc.OKGREEN}"
         b = f"{bc.OKBLUE}"
-        num = f"{bc.OKGREEN}{x+1}{bc.OKBLUE}"
-        print(f"{bc.OKBLUE}  [|] {num}: {org} {g}| Total: {b}{total} {bc.ENDC}")
+        if(x < 10):
+            num = f"{bc.OKGREEN}{x+1}{bc.OKBLUE}"
+            print(f"{bc.OKBLUE}  [|] {num}: {org} {g}| Total: {b}{total} {bc.ENDC}")
