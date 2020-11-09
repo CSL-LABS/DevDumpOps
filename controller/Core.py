@@ -10,6 +10,9 @@ class Core():
 
         if(self.input.sonarqube):
             self.sonarLogic()
+        else:
+            print("En construccion ;)")
+            exit(0)
         #TODO: otros targets
     
     def sonarLogic(self):

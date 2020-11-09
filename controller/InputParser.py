@@ -24,12 +24,12 @@ class InputParser():
             action="store_true",
             default=True,
             help="Plataforma SonarQube")
-        grupoExc_activos.add_argument("--jenkins",
-            action="store_true",
-            help="Plataforma Jenkins")
-        grupoExc_activos.add_argument("--maven",
-            action="store_true",
-            help="Plataforma Maven")
+        #grupoExc_activos.add_argument("--jenkins",
+        #    action="store_true",
+        #    help="Plataforma Jenkins")
+        #grupoExc_activos.add_argument("--maven",
+        #    action="store_true",
+        #    help="Plataforma Maven")
         
         # Opciones Configuracion Proxy
         gpProxy = parser.add_argument_group(title="Proxy - Optional")
