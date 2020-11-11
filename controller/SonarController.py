@@ -7,6 +7,7 @@ from model.Sonar import Sonar
 from utils.Utils import Utils
 from controller.SonarQube.Recon import Recon
 from controller.SonarQube.Dump import Dump
+from controller.SonarQube.BruteForce import BruteForce
 
 class SonarController():
     def __init__(self, input):
@@ -44,6 +45,10 @@ class SonarController():
             Utils().printProgressBar(i, len(self.sonar.components))
             i += 1
         print("[+] SONAR DUMP: COMPLETED")
+    
+    def bfSonar(self):
+        attack = BruteForce(self.input.url[0], self.sReq)
+        attack.bruteForce()
 
     def _auth(self):
         auth = ""

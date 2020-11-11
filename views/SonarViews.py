@@ -40,6 +40,12 @@ class SonarViews():
 
     PAGING_ERROR = f"{bc.FAIL}  [-] 10.000 records passed{bc.ENDC}"
 
+    BRUTEFORCE_START = f"{bc.OKGREEN}[+] BRUTEFORCE START: {bc.ENDC}"
+    BRUTEFORCE_OK = f"{bc.WARNING}  [|] Password Found: {bc.ENDC}"
+    BRUTEFORCE_END = f"{bc.OKBLUE}  [\] BruteForce End{bc.ENDC}"
+    BRUTEFORCE_ERROR = f"{bc.FAIL}  [-] Password NOT Found {bc.ENDC}"
+    BRUTEFORCE_DICT_ERROR = f"{bc.FAIL}  [-] File Dict NOT Found {bc.ENDC}"
+
     def ONE_SETTING(componente, value):
         print(f"{bc.OKBLUE}  [|] {componente}:{bc.ENDC} {value}")
 

@@ -13,10 +13,15 @@ class Core():
         else:
             print("En construccion ;)")
             exit(0)
+        print("[+] Thanks to you ;)")
         #TODO: otros targets
     
     def sonarLogic(self):
         sonar = SonarController(self.input)
-        sonar.enumeration()
+
+        if(self.input.bruteforce):
+            sonar.bfSonar()
+        else:
+            sonar.enumeration()
         if(self.input.dump != None): #TODO: agregar opciones del dump
             sonar.dumpInformation()

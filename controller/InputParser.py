@@ -56,6 +56,12 @@ class InputParser():
             action="store",
             choices=("all","member"),
             help="Dumpear todos los recursos")
+        gpActions.add_argument("--bruteforce",
+            action="store_true",
+            help="Ataque de Fuerza Bruta")
+        gpActions.add_argument("--backdoor",
+            action="store_true",
+            help="Crea una cuenta o token backdoor")
 
         # Parametros generales
         parser.add_argument("url",
