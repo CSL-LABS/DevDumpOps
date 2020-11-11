@@ -8,6 +8,7 @@ from utils.Utils import Utils
 from controller.SonarQube.Recon import Recon
 from controller.SonarQube.Dump import Dump
 from controller.SonarQube.BruteForce import BruteForce
+from controller.SonarQube.BackDoor import BackDoor
 
 class SonarController():
     def __init__(self, input):
@@ -49,6 +50,11 @@ class SonarController():
     def bfSonar(self):
         attack = BruteForce(self.input.url[0], self.sReq)
         attack.bruteForce()
+        print("[+] SONAR BRUTEFORCE: COMPLETED")
+    
+    def backdoor(self):
+        attack = BackDoor(self.input.url[0], self.sReq)
+        #print("[+] SONAR BACKDOOR: COMPLETED")
 
     def _auth(self):
         auth = ""

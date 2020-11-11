@@ -46,6 +46,20 @@ class SonarViews():
     BRUTEFORCE_ERROR = f"{bc.FAIL}  [-] Password NOT Found {bc.ENDC}"
     BRUTEFORCE_DICT_ERROR = f"{bc.FAIL}  [-] File Dict NOT Found {bc.ENDC}"
 
+    BACKDOOR_START = f"{bc.OKGREEN}[+] BACKDOOR START: {bc.ENDC}"
+    BACKDOOR_TOKEN_GEN = f"{bc.WARNING}  [|] Token Generated: {bc.ENDC}"
+    BACKDOOR_CREATED_USER = f"{bc.WARNING}  [|] User created! {bc.ENDC}"
+    BACKDOOR_PERMISSIONS_OK = f"{bc.WARNING}  [|] Add permission!:  {bc.ENDC}"
+    BACKDOOR_PERMISSIONS_ERROR = f"{bc.FAIL}  [|] No privileges to add permissions: {bc.ENDC}"
+    BACKDOOR_CHANGE_PWD_OK = f"{bc.WARNING}  [|] Password changed successfully! {bc.ENDC}"
+    BACKDOOR_CHANGE_PWD_400 = f"{bc.FAIL}  [-] No privileges to change password {bc.ENDC}"
+    BACKDOOR_MENU_ERROR = f"{bc.FAIL}  [-] Select a valid option {bc.ENDC}"
+    BACKDOOR_ERROR_400 = f"{bc.FAIL}  [-] The Object already exists {bc.ENDC}"
+    BACKDOOR_ERROR_401 = f"{bc.FAIL}  [-] Authentication is required {bc.ENDC}"
+    BACKDOOR_ERROR_403 =  f"{bc.FAIL}  [-] Insufficient privileges {bc.ENDC}"
+    BACKDOOR_ERROR = f"{bc.FAIL}  [-] Error params backdoor genereted {bc.ENDC}"
+    BACKDOOR_END = f"{bc.OKBLUE}  [\] Backdoor End{bc.ENDC}"
+
     def ONE_SETTING(componente, value):
         print(f"{bc.OKBLUE}  [|] {componente}:{bc.ENDC} {value}")
 
@@ -83,3 +97,12 @@ class SonarViews():
         if(x < 10):
             num = f"{bc.OKGREEN}{x+1}{bc.OKBLUE}"
             print(f"{bc.OKBLUE}  [|] {num}: {org} {g}| Total: {b}{total} {bc.ENDC}")
+    
+    def menuBackdoor():
+        opts =  f"{bc.OKBLUE}  [|] Options Backdoor:{bc.ENDC}\n"
+        opts += "    [1] Create New User\n"
+        opts += "    [2] Generate New Token\n"
+        opts += "    [3] Elevate Privileges\n"
+        opts += "    [4] Change Password for User\n"
+        opts += "    [0] Exit"
+        print(opts)

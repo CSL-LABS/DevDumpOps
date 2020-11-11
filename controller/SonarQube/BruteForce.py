@@ -28,6 +28,8 @@ class BruteForce():
         if(not isExist):
             print(sViews.BRUTEFORCE_DICT_ERROR)
             exit(0)
+        if(self.threads < 1):
+            self.threads = 5
         
     def _authReq(self, user, pwd, progress, fileSize):
         if(not self.flag):
