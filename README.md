@@ -9,7 +9,7 @@ git clone https://github.com/CSL-LABS/DevDumpOps.git
 cd DevDumpOps
 ```
 
-### Usage
+### Usage 🔧
 ```
 python DevDumpOps.py --help
 ```
@@ -29,7 +29,7 @@ All visible code components are downloaded and stored:
 - member 
     - The code linked to the credentials (useful for SonarCloud.io)
 
-### Hack ~~In construction ~~
+### Hack 🛠️~~In construction~~🛠️
 
 ## Usage examples
 - Enumeration without using credentials: 
@@ -60,7 +60,7 @@ python DevDumpOps.py --sonarqube -t [token] --dump member sonarcloud.io
 ```
 ![SonarCloud-token](images/01_sonarcloud_token.PNG)
 
-## Results
+## 📋 Results 📋
 
 The results are stored by default in the /results/ folder or in the one defined under the --output option, and the following information is found:
 - Configuration SMTP, GITHUB, GITLAB Y SVN
