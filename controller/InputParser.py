@@ -23,7 +23,7 @@ class InputParser():
         grupoExc_activos.add_argument("--sonarqube", 
             action="store_true",
             default=True,
-            help="Plataforma SonarQube")
+            help="SonarQube platform")
         #grupoExc_activos.add_argument("--jenkins",
         #    action="store_true",
         #    help="Plataforma Jenkins")
@@ -51,41 +51,41 @@ class InputParser():
         gpActions.add_argument("--enumeration", 
             action="store_true",
             default=True,  # por defecto primero enumera
-            help="Enumerar todos los recursos")
+            help="List all resources")
         gpActions.add_argument("--dump",
             action="store",
             choices=("all","member"),
-            help="Dumpear todos los recursos")
+            help="Dump all resources")
         gpActions.add_argument("--bruteforce",
             action="store_true",
-            help="Ataque de Fuerza Bruta")
+            help="Brute Force Attack")
         gpActions.add_argument("--backdoor",
             action="store_true",
-            help="Crea una cuenta o token backdoor")
+            help="Persistence techniques")
 
         # Parametros generales
         parser.add_argument("url",
             type=str,
             nargs=1,
-            help="URL del servicio",
+            help="Service url",
             metavar="[URL:PORT]")
         parser.add_argument("-u",
             dest="username",
             action="store",
-            help="Usuario de conexion")
+            help="Connection user")
         parser.add_argument("-p",
             dest="password",
             action="store",
-            help="Password de conexion")
+            help="Connection password")
         parser.add_argument("-t", 
             dest="token",
             action="store",
-            help="Token de conexion")
+            help="Connection Token")
         parser.add_argument("--output",
             dest="output",
             action="store",
             default="results",
-            help="Directorio de resultados")
+            help="Results directory")
 
         self.args = parser.parse_args()
         self._validateMember()
